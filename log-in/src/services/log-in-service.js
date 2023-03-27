@@ -1,7 +1,17 @@
+const { UserRepository } = require("../../../database");
+
 class LogInService {
+  constructor() {
+    this.repository = new UserRepository();
+  }
+
   async SignUp() {
     try {
-      console.log("signup");
+      const user = await this.repository.CreateUser({
+        email: "test1",
+        password: "test2",
+      });
+      console.log("signup", user);
     } catch (err) {
       console.log("error");
     }
@@ -9,7 +19,8 @@ class LogInService {
 
   async LogIn() {
     try {
-      console.log("login");
+      const user = await this.repository.FindUser("test2");
+      console.log("login", user);
     } catch (err) {
       console.log("error");
     }
