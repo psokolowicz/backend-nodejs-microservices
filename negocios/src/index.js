@@ -1,18 +1,16 @@
 const express = require("express");
 const port = 8001;
+const { databaseConnection } = require("../../database");
 const endpoints = require("./api");
 
 const StartServer = async () => {
   const app = express();
 
+  await databaseConnection();
   await endpoints(app);
 
   app.get("/", (req, res) => {
-    res.send("ERROR. No access from localhost");
-  });
-
-  app.post("/", (req, res) => {
-    // JWT
+    res.send("Negocios service");
   });
 
   app.listen(port, () => {

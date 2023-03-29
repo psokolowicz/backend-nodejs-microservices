@@ -1,12 +1,12 @@
 const { UserModel } = require("../models");
 
 class UserRepository {
-  async CreateUser({ email, password }) {
+  async CreateUser({ email, password, salt }) {
     try {
-      console.log(UserModel);
       const user = new UserModel({
         email,
         password,
+        salt,
       });
       const userResult = await user.save();
       return userResult;
@@ -15,10 +15,19 @@ class UserRepository {
     }
   }
 
-  async Users(email) {
+  async GetUsers(email, page) {
     try {
-      const users = await UserModel.find({ email });
-      return users;
+      const users = await UserModel.find({
+        email: { $regex: `${email}`, $options: "i" },
+      })
+        .skip(2 * page)
+        .limit(2);
+
+      const count = await UserModel.count({
+        email: { $regex: `${email}`, $options: "i" },
+      });
+      const paginatedUsers = users;
+      return { users: paginatedUsers, totalPages0Based: Math.ceil(count / 2) };
     } catch (err) {
       console.log(err);
     }
@@ -26,7 +35,6 @@ class UserRepository {
 
   async FindUser(email) {
     try {
-      console.log(email);
       const user = await UserModel.findOne({ email });
       return user;
     } catch (err) {

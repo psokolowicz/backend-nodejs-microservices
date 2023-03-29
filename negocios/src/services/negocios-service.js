@@ -1,9 +1,25 @@
+const { ValidateSignature } = require("../../../utils");
+const { UserRepository } = require("../../../database");
+
 class NegociosService {
-  async List() {
+  constructor() {
+    this.repository = new UserRepository();
+  }
+  async ValidateEndpoint(signature) {
     try {
-      console.log("list");
+      const isValid = await ValidateSignature(signature);
+      return isValid;
     } catch (err) {
-      console.log("error");
+      console.log("error", err);
+    }
+  }
+
+  async GetUsers(email, page) {
+    try {
+      const usersData = await this.repository.GetUsers(email, page);
+      return usersData;
+    } catch (err) {
+      console.log("error", err);
     }
   }
 }
