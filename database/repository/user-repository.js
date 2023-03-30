@@ -26,8 +26,12 @@ class UserRepository {
       const count = await UserModel.count({
         email: { $regex: `${email}`, $options: "i" },
       });
-      const paginatedUsers = users;
-      return { users: paginatedUsers, totalPages0Based: Math.ceil(count / 2) };
+      return {
+        users: users.map((u) => {
+          return { _id: u._id, email: u.email };
+        }),
+        totalPages: Math.ceil(count / 2),
+      };
     } catch (err) {
       console.log(err);
     }

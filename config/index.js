@@ -1,6 +1,13 @@
+const dotEnv = require("dotenv");
+
+const configFile = `./.env.dev`;
+dotEnv.config({ path: configFile });
+
 module.exports = {
-  DB_URL:
-    "mongodb+srv://psokolowicz:TRHPS1975@conexatest.vc64ae8.mongodb.net/?retryWrites=true&w=majority",
-  APP_SECRET_USER: "conexa_test",
-  APP_SECRET_ENDPOINT: "TEST1",
+  LOGIN_PORT: process.env.LOGIN_PORT,
+  NEGOCIO_PORT: process.env.NEGOCIO_PORT,
+  NEGOCIO_URL: process.env.NEGOCIO_URL,
+  DB_URL: process.env.DB_URL,
+  APP_SECRET_USER: process.env.APP_SECRET_USER,
+  APP_SECRET_ENDPOINT: process.env.APP_SECRET_ENDPOINT,
 };

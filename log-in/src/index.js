@@ -1,5 +1,5 @@
 const express = require("express");
-const port = 8000;
+const { LOGIN_PORT } = require("../../config");
 const { databaseConnection } = require("../../database");
 const endpoints = require("./api");
 
@@ -13,8 +13,8 @@ const StartServer = async () => {
     res.send("Log In service");
   });
 
-  app.listen(port, () => {
-    console.log(`Log In service listening on port ${port}`);
+  app.listen(LOGIN_PORT, () => {
+    console.log(`Log In service listening on port ${LOGIN_PORT}`);
   });
 };
 

@@ -1,5 +1,5 @@
 const express = require("express");
-const port = 8001;
+const { NEGOCIO_PORT } = require("../../config");
 const { databaseConnection } = require("../../database");
 const endpoints = require("./api");
 
@@ -13,8 +13,8 @@ const StartServer = async () => {
     res.send("Negocios service");
   });
 
-  app.listen(port, () => {
-    console.log(`Negocios service listening on port ${port}`);
+  app.listen(NEGOCIO_PORT, () => {
+    console.log(`Negocios service listening on port ${NEGOCIO_PORT}`);
   });
 };
 

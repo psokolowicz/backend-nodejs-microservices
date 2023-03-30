@@ -33,3 +33,7 @@ module.exports.ValidateSignature = async (signature, isUserValidation) => {
   }
   return false;
 };
+
+module.exports.ErrorHandler = async (res, message) => {
+  return res.status(400).json({ error: 1, msg: message });
+};

@@ -7,6 +7,7 @@ const {
   GenerateSignature,
   ValidateSignature,
 } = require("../../../utils");
+const { NEGOCIO_URL } = require("../../../config");
 
 class LogInService {
   constructor() {
@@ -15,6 +16,10 @@ class LogInService {
 
   async SignUp({ email, password }) {
     try {
+      const emailFormat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+      if (!email || !password || !email.match(emailFormat)) {
+        return;
+      }
       const salt = await GenerateSalt();
       const userPassword = await GeneratePassword(password, salt);
       const user = await this.repository.CreateUser({
@@ -22,9 +27,9 @@ class LogInService {
         password: userPassword,
         salt,
       });
-      return user;
+      return { _id: user._id, email: user.email };
     } catch (err) {
-      console.log("error", err);
+      console.log(err);
     }
   }
 
@@ -46,25 +51,30 @@ class LogInService {
             },
             true
           );
-          return { email: user.email, token };
+          return { _id: user._id, email: user.email, token };
+        } else {
+          return;
         }
       }
     } catch (err) {
-      console.log("error", err);
+      console.log(err);
     }
   }
 
-  async ListNegocioUsers(signature, params) {
+  async ListNegocioUsers(signature, email, page) {
     try {
       await ValidateSignature(signature, true);
       const token = await GenerateSignature({}, false);
-      const response = await axios.get("http://localhost:8001/list", {
+      email = email ? email : "";
+      page = page && parseInt(page) ? page : 0;
+      const response = await axios.get(`${NEGOCIO_URL}/list`, {
         headers: { Authorization: `Bearer ${token}` },
-        params,
+        params: { email, page },
       });
       return response?.data;
     } catch (err) {
-      console.log("error", err);
+      console.log(err);
+      return;
     }
   }
 }

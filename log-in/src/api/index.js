@@ -1,5 +1,6 @@
 const express = require("express");
 const LogInService = require("../services/log-in-service");
+const { ErrorHandler } = require("../../../utils");
 
 module.exports = (app) => {
   const service = new LogInService();
@@ -10,7 +11,11 @@ module.exports = (app) => {
     try {
       const { email, password } = req.body;
       const user = await service.SignUp({ email, password });
-      return res.json(user);
+      if (user) {
+        return res.json(user);
+      } else {
+        return ErrorHandler(res, "Invalid");
+      }
     } catch (err) {
       console.log(err);
     }
@@ -20,7 +25,11 @@ module.exports = (app) => {
     try {
       const { email, password } = req.body;
       const user = await service.LogIn({ email, password });
-      return res.json(user);
+      if (user) {
+        return res.json(user);
+      } else {
+        return ErrorHandler(res, "Invalid");
+      }
     } catch (err) {
       console.log(err);
     }
@@ -29,9 +38,13 @@ module.exports = (app) => {
   app.get("/list", async (req, res) => {
     try {
       const signature = req.get("Authorization");
-      const { email, page } = req.query;
-      const users = await service.ListNegocioUsers(signature, { email, page });
-      return res.json(users);
+      let { email, page } = req.query;
+      const users = await service.ListNegocioUsers(signature, email, page);
+      if (users) {
+        return res.json(users);
+      } else {
+        return ErrorHandler(res, "Invalid");
+      }
     } catch (err) {
       console.log(err);
     }

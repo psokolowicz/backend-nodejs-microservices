@@ -10,7 +10,7 @@ class NegociosService {
       const isValid = await ValidateSignature(signature);
       return isValid;
     } catch (err) {
-      console.log("error", err);
+      console.log(err);
     }
   }
 
@@ -19,7 +19,7 @@ class NegociosService {
       const usersData = await this.repository.GetUsers(email, page);
       return usersData;
     } catch (err) {
-      console.log("error", err);
+      console.log(err);
     }
   }
 }
